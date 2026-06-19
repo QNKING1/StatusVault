@@ -51,6 +51,10 @@ hilt-work = { group = "androidx.hilt", name = "hilt-work", version = "1.1.0" }
 hilt-work-compiler = { group = "androidx.hilt", name = "hilt-compiler", version = "1.1.0" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 
+# Ye 3 nayi lines add karo
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+junit-ext = { group = "androidx.test.ext", name = "junit", version.ref = "junitExt" }
+espresso = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso" }
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
