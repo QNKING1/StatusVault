@@ -8,7 +8,7 @@ import com.statusvault.app.data.entity.StatusFile
 @Database(
     entities = [StatusFile::class, RecoveredMessage::class],
     version = 1,
-    exportSchema = true
+    exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
     abstract fun statusFileDao(): StatusFileDao

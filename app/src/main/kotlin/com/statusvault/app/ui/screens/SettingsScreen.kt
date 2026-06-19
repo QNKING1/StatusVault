@@ -1,12 +1,7 @@
 package com.statusvault.app.ui.screens
 
-import android.content.Intent
-import android.net.Uri
-import android.os.Build
-import android.provider.Settings
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -25,13 +20,12 @@ import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.NotificationsActive
 import androidx.compose.material.icons.filled.SdStorage
 import androidx.compose.material.icons.filled.SettingsBackupRestore
-import androidx.compose.material.icons.filled.Storage
 import androidx.compose.material.icons.filled.Sync
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -136,8 +130,8 @@ fun SettingsScreen(
                 title = stringResource(R.string.notification_access),
                 subtitle = if (hasNotificationAccess) "Granted" else stringResource(R.string.notification_access_desc),
                 onClick = {
-                    val intent = Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS)
-                    context.startActivity(intent)
+                    // Use safe intent helper
+                    PermissionsUtil.openNotificationListenerSettings(context)
                 }
             )
 
@@ -150,17 +144,8 @@ fun SettingsScreen(
                 title = stringResource(R.string.storage_permission),
                 subtitle = if (hasStorage) "Granted" else stringResource(R.string.storage_permission_desc),
                 onClick = {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                        val intent = Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION).apply {
-                            data = Uri.parse("package:${context.packageName}")
-                        }
-                        context.startActivity(intent)
-                    } else {
-                        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-                            data = Uri.parse("package:${context.packageName}")
-                        }
-                        context.startActivity(intent)
-                    }
+                    // Use safe intent helper with fallback chain
+                    PermissionsUtil.openManageAllFilesSettings(context)
                 }
             )
 
@@ -332,7 +317,7 @@ fun SettingsSwitchItem(
             enabled = enabled
         )
     }
-    Divider(
+    HorizontalDivider(
         modifier = Modifier.padding(start = 56.dp),
         color = MaterialTheme.colorScheme.outline.copy(alpha = 0.2f)
     )
@@ -381,7 +366,7 @@ fun SettingsClickableItem(
             tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
         )
     }
-    Divider(
+    HorizontalDivider(
         modifier = Modifier.padding(start = 56.dp),
         color = MaterialTheme.colorScheme.outline.copy(alpha = 0.2f)
     )

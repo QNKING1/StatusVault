@@ -1,7 +1,7 @@
 package com.statusvault.app.util
 
 import android.app.Activity
-import android.app.AppOpsManager
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -9,11 +9,14 @@ import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.provider.Settings
+import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 
 object PermissionsUtil {
+
+    private const val TAG = "PermissionsUtil"
 
     // Storage Permissions
     fun hasStoragePermission(context: Context): Boolean {
@@ -82,14 +85,83 @@ object PermissionsUtil {
         }
     }
 
-    fun requestAllFilesPermission(activity: Activity) {
+    /**
+     * Safely open the "Manage All Files" settings page.
+     * Uses a fallback chain to handle devices that don't support the intent:
+     * 1. Try ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION with package URI
+     * 2. Fall back to ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION (no package filter)
+     * 3. Fall back to app details settings page
+     */
+    fun openManageAllFilesSettings(context: Context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            val intent = Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION).apply {
-                data = Uri.parse("package:${activity.packageName}")
+            // Attempt 1: App-specific all-files-access settings
+            try {
+                val intent = Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION).apply {
+                    data = Uri.parse("package:${context.packageName}")
+                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                }
+                context.startActivity(intent)
+                return
+            } catch (e: ActivityNotFoundException) {
+                Log.w(TAG, "ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION not supported", e)
+            } catch (e: Exception) {
+                Log.w(TAG, "Failed to open app-specific all-files settings", e)
             }
-            activity.startActivityForResult(intent, REQUEST_MANAGE_ALL_FILES)
-        } else {
-            requestStoragePermission(activity)
+
+            // Attempt 2: General all-files-access settings (no package filter)
+            try {
+                val intent = Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION).apply {
+                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                }
+                context.startActivity(intent)
+                return
+            } catch (e: ActivityNotFoundException) {
+                Log.w(TAG, "ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION not supported", e)
+            } catch (e: Exception) {
+                Log.w(TAG, "Failed to open all-files settings", e)
+            }
+        }
+
+        // Fallback: App details settings page
+        openAppDetailsSettings(context)
+    }
+
+    /**
+     * Safely open the app's details settings page.
+     */
+    fun openAppDetailsSettings(context: Context) {
+        try {
+            val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                data = Uri.parse("package:${context.packageName}")
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
+            context.startActivity(intent)
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to open app details settings", e)
+            // Last resort: open general settings
+            try {
+                val intent = Intent(Settings.ACTION_SETTINGS).apply {
+                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                }
+                context.startActivity(intent)
+            } catch (e2: Exception) {
+                Log.e(TAG, "Failed to open any settings page", e2)
+            }
+        }
+    }
+
+    /**
+     * Safely open the notification listener settings page.
+     */
+    fun openNotificationListenerSettings(context: Context) {
+        try {
+            val intent = Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS).apply {
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
+            context.startActivity(intent)
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to open notification listener settings", e)
+            openAppDetailsSettings(context)
         }
     }
 
@@ -97,11 +169,6 @@ object PermissionsUtil {
     fun hasNotificationAccess(context: Context): Boolean {
         return NotificationManagerCompat.getEnabledListenerPackages(context)
             .contains(context.packageName)
-    }
-
-    fun requestNotificationAccess(activity: Activity) {
-        val intent = Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS)
-        activity.startActivityForResult(intent, REQUEST_NOTIFICATION_ACCESS)
     }
 
     // Post Notification Permission (Android 13+)

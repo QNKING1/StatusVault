@@ -3,6 +3,7 @@ package com.statusvault.app.ui
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
@@ -181,10 +182,14 @@ fun AppNavigation(
         composable(BottomNavItem.Status.route) {
             StatusScreen(
                 onImageClick = { imagePath ->
-                    navController.navigate("image_viewer/$imagePath")
+                    // URL-encode the path to prevent '/' from breaking navigation routes
+                    val encodedPath = Uri.encode(imagePath)
+                    navController.navigate("image_viewer/$encodedPath")
                 },
                 onVideoClick = { videoPath ->
-                    navController.navigate("video_player/$videoPath")
+                    // URL-encode the path to prevent '/' from breaking navigation routes
+                    val encodedPath = Uri.encode(videoPath)
+                    navController.navigate("video_player/$encodedPath")
                 },
                 snackbarHostState = snackbarHostState
             )
@@ -208,7 +213,8 @@ fun AppNavigation(
                 navArgument("imagePath") { type = NavType.StringType }
             )
         ) { backStackEntry ->
-            val imagePath = backStackEntry.arguments?.getString("imagePath") ?: ""
+            // Decode the URL-encoded path back to the actual file path
+            val imagePath = Uri.decode(backStackEntry.arguments?.getString("imagePath") ?: "")
             ImageViewerScreen(
                 imagePath = imagePath,
                 onBackClick = { navController.popBackStack() }
@@ -221,7 +227,8 @@ fun AppNavigation(
                 navArgument("videoPath") { type = NavType.StringType }
             )
         ) { backStackEntry ->
-            val videoPath = backStackEntry.arguments?.getString("videoPath") ?: ""
+            // Decode the URL-encoded path back to the actual file path
+            val videoPath = Uri.decode(backStackEntry.arguments?.getString("videoPath") ?: "")
             VideoPlayerScreen(
                 videoPath = videoPath,
                 onBackClick = { navController.popBackStack() }

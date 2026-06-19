@@ -3,8 +3,10 @@ package com.statusvault.app.ui.components
 import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -28,6 +30,7 @@ import com.statusvault.app.data.entity.StatusFile
 import com.statusvault.app.ui.theme.SelectionActiveColor
 import java.io.File
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun StatusGridItem(
     status: StatusFile,
@@ -40,13 +43,17 @@ fun StatusGridItem(
     Surface(
         modifier = modifier
             .padding(2.dp)
+            .aspectRatio(1f) // Ensure grid items are visible squares
             .clip(RoundedCornerShape(8.dp))
             .border(
                 width = if (isSelected) 3.dp else 0.dp,
                 color = if (isSelected) SelectionActiveColor else MaterialTheme.colorScheme.outline.copy(alpha = 0.2f),
                 shape = RoundedCornerShape(8.dp)
             )
-            .clickable(onClick = onClick)
+            .combinedClickable(
+                onClick = onClick,
+                onLongClick = onLongClick
+            )
             .then(
                 if (selectionMode) {
                     Modifier

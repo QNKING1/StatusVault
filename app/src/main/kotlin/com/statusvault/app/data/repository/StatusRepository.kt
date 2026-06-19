@@ -140,13 +140,17 @@ class StatusRepository @Inject constructor(
         val storageDir = Environment.getExternalStorageDirectory()
 
         Constants.WHATSAPP_STATUS_PATHS.forEach { relativePath ->
-            val fullPath = File(storageDir, relativePath)
-            if (fullPath.exists() && fullPath.isDirectory) {
-                val sourcePackage = when {
-                    relativePath.contains("w4b") -> Constants.WHATSAPP_BUSINESS_PACKAGE
-                    else -> Constants.WHATSAPP_PACKAGE
+            try {
+                val fullPath = File(storageDir, relativePath)
+                if (fullPath.exists() && fullPath.isDirectory) {
+                    val sourcePackage = when {
+                        relativePath.contains("w4b") -> Constants.WHATSAPP_BUSINESS_PACKAGE
+                        else -> Constants.WHATSAPP_PACKAGE
+                    }
+                    statuses.addAll(scanDirectory(fullPath, sourcePackage))
                 }
-                statuses.addAll(scanDirectory(fullPath, sourcePackage))
+            } catch (e: Exception) {
+                // Ignore inaccessible paths
             }
         }
 
