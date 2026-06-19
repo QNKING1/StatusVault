@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">StatusVault</string>
+
+    <!-- Bottom Navigation -->
+    <string name="nav_status">Status</string>
+    <string name="nav_messages">Messages</string>
+    <string name="nav_settings">Settings</string>
+
+    <!-- Status Screen -->
+    <string name="tab_images">Images</string>
+    <string name="tab_videos">Videos</string>
+    <string name="select_all">Select All</string>
+    <string name="deselect_all">Deselect All</string>
+    <string name="save_selected">Save Selected</string>
+    <string name="delete_selected">Delete Selected</string>
+    <string name="items_selected">%d selected</string>
+    <string name="no_statuses_found">No statuses found</string>
+    <string name="whatsapp_not_installed">WhatsApp not installed</string>
+    <string name="statuses_empty_desc">Open WhatsApp and view some statuses first, then come back here.</string>
+    <string name="saved_successfully">Saved successfully</string>
+    <string name="save_failed">Save failed</string>
+    <string name="items_saved">%d items saved</string>
+    <string name="items_deleted">%d items deleted</string>
+
+    <!-- Messages Screen -->
+    <string name="search_messages">Search messages…</string>
+    <string name="all_messages">All Messages</string>
+    <string name="deleted_only">Deleted Only</string>
+    <string name="no_messages">No messages recovered yet</string>
+    <string name="messages_empty_desc">Enable the notification service to start recovering messages.</string>
+    <string name="deleted_badge">DELETED</string>
+    <string name="today">Today</string>
+    <string name="yesterday">Yesterday</string>
+    <string name="message_from">Message from %s</string>
+
+    <!-- Settings Screen -->
+    <string name="settings_title">Settings</string>
+    <string name="appearance">Appearance</string>
+    <string name="dark_mode">Dark Mode</string>
+    <string name="dark_mode_desc">Enable dark theme</string>
+    <string name="auto_save">Auto Save Statuses</string>
+    <string name="auto_save_desc">Automatically save new statuses</string>
+    <string name="storage">Storage</string>
+    <string name="cleanup_saved">Clean Up Saved</string>
+    <string name="cleanup_saved_desc">Delete all saved statuses</string>
+    <string name="cleanup_confirm_title">Delete All Saved?</string>
+    <string name="cleanup_confirm_desc">This will permanently delete all saved statuses. This action cannot be undone.</string>
+    <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
+    <string name="services">Services</string>
+    <string name="notification_access">Notification Access</string>
+    <string name="notification_access_desc">Required for message recovery</string>
+    <string name="grant_access">Grant Access</string>
+    <string name="storage_permission">Storage Permission</string>
+    <string name="storage_permission_desc">Required to access WhatsApp statuses</string>
+    <string name="about">About</string>
+    <string name="app_version">Version %s</string>
+    <string name="about_desc">StatusVault is a 100%% offline app. No data is ever uploaded to the cloud. Your privacy is our priority.</string>
+    <string name="privacy_note">No internet permission • No analytics • No cloud upload</string>
+
+    <!-- Permission Dialogs -->
+    <string name="permission_required">Permission Required</string>
+    <string name="storage_permission_rationale">StatusVault needs access to your storage to find and save WhatsApp statuses. This permission is essential for the app to function.</string>
+    <string name="all_files_permission_rationale">On Android 11+, StatusVault needs "All Files Access" permission to read WhatsApp status files from protected storage. Please grant this permission in settings.</string>
+    <string name="notification_permission_rationale">StatusVault needs notification permission to detect deleted messages and alert you.</string>
+    <string name="go_to_settings">Go to Settings</string>
+    <string name="permission_denied">Permission Denied</string>
+    <string name="permission_denied_desc">The app cannot function without this permission.</string>
+
+    <!-- Notification Service -->
+    <string name="service_not_running">Message Recovery Service Not Running</string>
+    <string name="service_enable_desc">Enable notification access to recover deleted messages</string>
+    <string name="message_deleted_notification">Message Deleted</string>
+    <string name="message_deleted_content">%s deleted a message. Tap to view.</string>
+    <string name="statusvault_channel">StatusVault</string>
+    <string name="statusvault_channel_desc">Notifications for deleted message recovery</string>
+
+    <!-- Video Player -->
+    <string name="video_error">Error playing video</string>
+</resources>
